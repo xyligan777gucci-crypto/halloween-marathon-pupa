@@ -407,58 +407,50 @@
                         ` : ''}
 
                         <div class="mb-2" onclick="event.stopPropagation()">
-                            <input 
-                                type="text" 
-                                placeholder="Название фильма..." 
-                                value="${escapeHtml(item.title)}" 
-                                onchange="updateTitle(${day}, this.value)"
-                                class="w-full bg-black/50 border border-gray-800 focus:border-orange-500 rounded-xl px-3 py-1.5 text-xs text-gray-100 placeholder-gray-600 outline-none transition font-medium"
-                            />
-                        </div>
+<div class="mb-2" onclick="event.stopPropagation()">
+            <textarea 
+              placeholder="Заметки / Впечатления..." 
+              onchange="updateNotes(${day}, this.value)"
+              rows="2" 
+              class="w-full bg-black/30 border border-gray-800/80 focus:border-purple-500 rounded-xl px-2.5 py-1 text-[11px] text-gray-300 placeholder-gray-600 outline-none transition"
+            >${escapeHtml(item.notes)}</textarea>
+          </div>
 
-                        <div class="mb-2" onclick="event.stopPropagation()">
-                            <textarea 
-                                placeholder="Заметки / Впечатления..." 
-                                onchange="updateNotes(${day}, this.value)"
-                                rows="2"
-                                class="w-full bg-black/30 border border-gray-800/80 focus:border-purple-500 rounded-xl px-2.5 py-1 text-[11px] text-gray-300 placeholder-gray-600 outline-none transition resize-none"
-                            >${escapeHtml(item.notes)}</textarea>
-                        </div>
-                        <div class="mb-2" onclick="event.stopPropagation()">
-    <textarea
-        placeholder="Заметки / Впечатления 2..."
-        onchange="updateNotes2(${day}, this.value)"
-        rows="2"
-        class="w-full bg-black/30 border border-gray-800/80 focus:border-orange-500 rounded-xl px-2.5 py-1 text-[11px] text-gray-300 placeholder-gray-600 outline-none transition resize-none"
-    >${escapeHtml(item.notes2)}</textarea>
-</div>
+          <div class="mb-2" onclick="event.stopPropagation()">
+            <textarea 
+              placeholder="Заметки / Впечатления 2..." 
+              onchange="updateNotes2(${day}, this.value)"
+              rows="2" 
+              class="w-full bg-black/30 border border-gray-800/80 focus:border-orange-500 rounded-xl px-2.5 py-1 text-[11px] text-gray-300 placeholder-gray-600 outline-none transition"
+            >${escapeHtml(item.notes2 || '')}</textarea>
+          </div>
 
-                        <div class="flex items-center justify-between mb-2 text-[10px]" onclick="event.stopPropagation()">
-                            <button onclick="promptPoster(${day})" class="text-purple-400 hover:underline flex items-center gap-1">
-                                <span>🖼️ ${item.poster ? 'Изменить постер' : '+ Постер URL'}</span>
-                            </button>
-                        </div>
+          <div class="flex items-center justify-between mb-2 text-[10px]" onclick="event.stopPropagation()">
+            <button onclick="promptPoster(${day})" class="text-purple-400 hover:underline flex items-center gap-1">
+              <span>${item.poster ? '📷 Изменить постер' : '+ Постер URL'}</span>
+            </button>
+          </div>
 
-                        <div class="flex flex-wrap gap-1 min-h-[24px] mb-2">
-                            ${stickersHtml}
-                        </div>
-                    </div>
+          <div class="flex flex-wrap gap-1 min-h-[24px] mb-2">
+            ${stickersHtml}
+          </div>
 
-                    <div class="pt-2 border-t border-gray-800/60 flex justify-between items-center" onclick="event.stopPropagation()">
-                        <span class="text-[11px] text-gray-500">Оценка:</span>
-                        <div class="flex gap-1 text-sm">
-                            ${[1, 2, 3, 4, 5].map(star => `
-                                <span onclick="setRating(${day}, ${star})" class="cursor-pointer transition-colors ${star <= item.rating ? 'text-amber-400' : 'text-gray-700 hover:text-amber-300'}">★</span>
-                            `).join('')}
-                        </div>
-                    </div>
+          <div class="pt-2 border-t border-gray-800/60 flex justify-between items-center" onclick="event.stopPropagation()">
+            <span class="text-[11px] text-gray-500">Оценка:</span>
+            <div class="flex gap-1 text-sm">
+              ${[1, 2, 3, 4, 5].map(star => `
+                <span onclick="setRating(${day}, ${star})" class="cursor-pointer transition-colors ${star <= item.rating ? 'text-amber-400' : 'text-gray-700 hover:text-amber-400/50'}">★</span>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
 
-                grid.appendChild(card);
-            }
+      grid.appendChild(card);
+    }
 
-            updateProgress();
-        }
-
+    updateProgress();
+  }
         function updateTitle(day, val) { state.days[day].title = val; saveToCloud(); }
         function updateNotes(day, val) { state.days[day].notes = val; saveToCloud(); }
         function updateNotes2(day, val) { state.days[day].notes2 = val; saveToCloud(); }
