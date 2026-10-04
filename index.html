@@ -568,6 +568,52 @@
     resize();
     window.addEventListener('resize', resize);
 
+    // Функция отрисовки векторного рисунка тыквы
+    function drawPumpkinVector(x, y, scale, opacity) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+        ctx.globalAlpha = opacity;
+
+        // 1. Оранжевое тело тыквы
+        ctx.fillStyle = '#ff7518';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 20, 16, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 2. Зеленый/темный хвостик вверху
+        ctx.fillStyle = '#2d5a27';
+        ctx.beginPath();
+        ctx.rect(-2, -21, 4, 6);
+        ctx.fill();
+
+        // 3. Вырезанные черные глаза (треугольники)
+        ctx.fillStyle = '#0b0a10';
+        ctx.beginPath();
+        // Левый глаз
+        ctx.moveTo(-11, -5); ctx.lineTo(-4, -1); ctx.lineTo(-10, 4); ctx.closePath();
+        // Правый глаз
+        ctx.moveTo(11, -5); ctx.lineTo(4, -1); ctx.lineTo(10, 4); ctx.closePath();
+        ctx.fill();
+
+        // 4. Вырезанный рот (зигзаг)
+        ctx.beginPath();
+        ctx.moveTo(-12, 5);
+        ctx.lineTo(-7, 10);
+        ctx.lineTo(-3, 6);
+        ctx.lineTo(0, 10);
+        ctx.lineTo(3, 6);
+        ctx.lineTo(7, 10);
+        ctx.lineTo(12, 5);
+        ctx.lineTo(8, 12);
+        ctx.lineTo(0, 14);
+        ctx.lineTo(-8, 12);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.restore();
+    }
+
     const particles = [];
     for (let i = 0; i < 45; i++) {
         const rand = Math.random();
@@ -595,7 +641,6 @@
             p.y += p.speedY;
             p.x += p.speedX;
             
-            // Если тыква вылетает за верхний край (-40px с учетом размера), возвращаем её вниз
             if (p.y < -40) {
                 p.y = canvas.height + 40;
                 p.x = Math.random() * canvas.width;
@@ -611,9 +656,8 @@
                 ctx.font = '10px sans-serif';
                 ctx.fillText('🦇', p.x, p.y);
             } else if (p.type === 'pumpkin') {
-                ctx.fillStyle = `rgba(255, 117, 24, ${p.opacity})`;
-                ctx.font = '38px sans-serif'; // Размер увеличен примерно в 3.5 раза
-                ctx.fillText('🎃', p.x, p.y);
+                // Передаем координаты, масштаб рисунка (1.1) и прозрачность
+                drawPumpkinVector(p.x, p.y, 1.1, p.opacity);
             }
         });
         requestAnimationFrame(animate);
