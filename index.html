@@ -570,7 +570,6 @@
 
     const particles = [];
     for (let i = 0; i < 45; i++) {
-        // Случайным образом выбираем один из трех типов элементов
         const rand = Math.random();
         let particleType = 'spark';
         if (rand > 0.85) {
@@ -595,8 +594,10 @@
         particles.forEach(p => {
             p.y += p.speedY;
             p.x += p.speedX;
-            if (p.y < -10) {
-                p.y = canvas.height + 10;
+            
+            // Если тыква вылетает за верхний край (-40px с учетом размера), возвращаем её вниз
+            if (p.y < -40) {
+                p.y = canvas.height + 40;
                 p.x = Math.random() * canvas.width;
             }
 
@@ -611,7 +612,7 @@
                 ctx.fillText('🦇', p.x, p.y);
             } else if (p.type === 'pumpkin') {
                 ctx.fillStyle = `rgba(255, 117, 24, ${p.opacity})`;
-                ctx.font = '11px sans-serif';
+                ctx.font = '38px sans-serif'; // Размер увеличен примерно в 3.5 раза
                 ctx.fillText('🎃', p.x, p.y);
             }
         });
