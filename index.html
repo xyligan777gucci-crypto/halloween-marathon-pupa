@@ -290,15 +290,16 @@
         };
 
         for (let i = 1; i <= TOTAL_DAYS; i++) {
-            state.days[i] = {
-                title: '',
-                rating: 0,
-                completed: false,
-                notes: '',
-                poster: '',
-                stickers: []
-            };
-        }
+    state.days[i] = {
+        title: '',
+        rating: 0,
+        completed: false,
+        notes: '',
+        notes2: '', // <-- ДОБАВИТЬ ЭТУ СТРОКУ
+        poster: '',
+        stickers: []
+    };
+}
 
         // Firebase Sync Listeners
         marathonRef.on('value', (snapshot) => {
@@ -315,18 +316,17 @@
                     state.theme = data.theme;
                     document.body.className = `theme-${data.theme} min-h-screen flex flex-col justify-between relative selection:bg-orange-500 selection:text-black`;
                 }
-                if (data.days) {
-                    for (let i = 1; i <= TOTAL_DAYS; i++) {
-                        if (data.days[i]) {
-                            state.days[i] = {
-                                title: data.days[i].title || '',
-                                rating: data.days[i].rating || 0,
-                                completed: !!data.days[i].completed,
-                                notes: data.days[i].notes || '',
-                                poster: data.days[i].poster || '',
-                                stickers: data.days[i].stickers || []
-                            };
-                        }
+                if (data.days[i]) {
+    state.days[i] = {
+        title: data.days[i].title || '',
+        rating: data.days[i].rating || 0,
+        completed: !!data.days[i].completed,
+        notes: data.days[i].notes || '',
+        notes2: data.days[i].notes2 || '', // <-- ДОБАВИТЬ ЭТУ СТРОКУ
+        poster: data.days[i].poster || '',
+        stickers: data.days[i].stickers || []
+    };
+}
                     }
                 }
                 renderCalendar();
@@ -424,6 +424,14 @@
                                 class="w-full bg-black/30 border border-gray-800/80 focus:border-purple-500 rounded-xl px-2.5 py-1 text-[11px] text-gray-300 placeholder-gray-600 outline-none transition resize-none"
                             >${escapeHtml(item.notes)}</textarea>
                         </div>
+                        <div class="mb-2" onclick="event.stopPropagation()">
+    <textarea
+        placeholder="Заметки / Впечатления 2..."
+        onchange="updateNotes2(${day}, this.value)"
+        rows="2"
+        class="w-full bg-black/30 border border-gray-800/80 focus:border-orange-500 rounded-xl px-2.5 py-1 text-[11px] text-gray-300 placeholder-gray-600 outline-none transition resize-none"
+    >${escapeHtml(item.notes2)}</textarea>
+</div>
 
                         <div class="flex items-center justify-between mb-2 text-[10px]" onclick="event.stopPropagation()">
                             <button onclick="promptPoster(${day})" class="text-purple-400 hover:underline flex items-center gap-1">
@@ -454,6 +462,7 @@
 
         function updateTitle(day, val) { state.days[day].title = val; saveToCloud(); }
         function updateNotes(day, val) { state.days[day].notes = val; saveToCloud(); }
+        function updateNotes2(day, val) { state.days[day].notes2 = val; saveToCloud(); }
 
         function setRating(day, rating) {
             state.days[day].rating = state.days[day].rating === rating ? 0 : rating;
@@ -515,7 +524,7 @@
         function clearAll() {
             if (confirm('Очистить весь календарь? Все фильмы и стикеры удалятся у обоих пользователей.')) {
                 for (let i = 1; i <= TOTAL_DAYS; i++) {
-                    state.days[i] = { title: '', rating: 0, completed: false, notes: '', poster: '', stickers: [] };
+                    state.days[i] = { title: '', rating: 0, completed: false, notes: '', notes2: '', poster: '', stickers: [] };
                 }
                 saveToCloud();
             }
